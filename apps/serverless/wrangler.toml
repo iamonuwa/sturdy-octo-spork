@@ -1,0 +1,9 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "round-dust-4939"
+main = "src/index.ts"
+compatibility_date = "2024-06-03"
+workers_dev = true
+
+kv_namespaces = [
+	{ binding = "VM_CACHE_DEV", id = "1ac4a80432e44b82a050ef85bd63c7f2" }
+]
