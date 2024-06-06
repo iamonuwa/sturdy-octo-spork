@@ -10,3 +10,4 @@ export * from "./toast";
 export * from "./form";
 export * from "./select";
 export * from "./skeleton";
+export * from "./avatar";

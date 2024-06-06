@@ -1,6 +1,7 @@
 import { FrameIcon } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/config";
+import { UserProfile } from "@/domains/account/components/Profile";
 
 export const Header = () => {
   return (
@@ -25,6 +26,11 @@ export const Header = () => {
           </Link>
         ))}
       </nav>
+      <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
+        <div className="ml-auto">
+          <UserProfile />
+        </div>
+      </div>
     </header>
   );
 };
