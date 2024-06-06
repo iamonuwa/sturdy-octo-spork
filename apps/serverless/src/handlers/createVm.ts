@@ -1,22 +1,35 @@
 import { IRequest } from 'itty-router';
 import { connectDB } from '../utils/supabase';
+import { createVmSchema } from "@machines/model/vm"
 
-export const listVms = async (request: IRequest, env: Env): Promise<Response> => {
+export const createVm = async (request: IRequest, env: Env): Promise<Response> => {
 	try {
-		const { data, error, count } = await connectDB(env)
+		const payload = await request.json();
+		const parsedPayload = createVmSchema.safeParse(payload);
+
+		if (!parsedPayload.success) {
+			return new Response(
+				JSON.stringify({
+					message: 'Invalid request payload.'
+				}),
+				{ status: 400, headers: { 'Content-Type': 'application/json' } }
+			);
+		}
+
+		const { data, error } = await connectDB(env)
 			.from('vms')
-			.select('*', { count: 'exact' });
+			.insert(parsedPayload.data)
 
 		if (error) {
 			console.error('Supabase error:', error.message);
 			return new Response(
-				JSON.stringify({ message: 'Failed to retrieve VMs.' }),
+				JSON.stringify({ message: 'Failed to create VM.' }),
 				{ status: 500, headers: { 'Content-Type': 'application/json' } }
 			);
 		}
 
 		return new Response(
-			JSON.stringify({ count, data, message: 'VMs retrieved successfully.' }),
+			JSON.stringify({ data, message: 'VM created successfully.' }),
 			{ headers: { 'Content-Type': 'application/json' } }
 		);
 	} catch (error) {

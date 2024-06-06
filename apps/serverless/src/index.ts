@@ -15,6 +15,18 @@ import apiRouter from './router';
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return apiRouter.handle(request, env);
+		const corsHeaders = {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "GET,HEAD,POST,PATCH,OPTIONS",
+			"Access-Control-Max-Age": "86400",
+		};
+		return apiRouter.handle(request, env, ctx).then((response) => {
+			return new Response(response.body, {
+				headers: {
+					...response.headers,
+					...corsHeaders,
+				}
+			});
+		});
 	},
 } satisfies ExportedHandler<Env>

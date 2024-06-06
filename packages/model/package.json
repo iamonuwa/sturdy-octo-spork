@@ -1,0 +1,9 @@
+{
+  "name": "@machines/model",
+  "version": "1.0.0",
+  "keywords": [],
+  "dependencies": {
+    "@hookform/resolvers": "^3.6.0",
+    "zod": "^3.23.8"
+  }
+}

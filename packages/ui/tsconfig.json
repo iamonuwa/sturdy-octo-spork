@@ -1,5 +1,5 @@
 {
   "extends": "@machines/typescript-config/react-library.json",
-  "include": ["."],
+  "include": [".", "../../apps/web/postcss.config.js"],
   "exclude": ["dist", "build", "node_modules"]
 }
