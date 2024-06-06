@@ -4,7 +4,7 @@ import { Vm } from "@/models/vm"
 import { useQuery } from "@tanstack/react-query"
 
 const fetchInstances = async () => {
-    const response = await fetch("http://localhost:57091/apis/vms", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms`, {
         method: "GET"
     })
 

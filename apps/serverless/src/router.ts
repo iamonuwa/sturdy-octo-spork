@@ -1,4 +1,5 @@
 import { Router } from 'itty-router';
+import { authUser } from './handlers/auth';
 import { createVm } from './handlers/createVm';
 import { fetchVmMetrics } from './handlers/metrics';
 import { listVms } from './handlers/listVms';
@@ -18,6 +19,7 @@ router
 	.get(`/apis/vms/:id/metrics`, fetchVmMetrics)
 	.patch(`/apis/vms/:id`, updateVm)
 	.post('/apis/vms', createVm)
+	.post('/apis/auth', authUser)
 	.all('*', () => new Response(JSON.stringify({
 		message: 'Requested resource not found',
 	}), { status: 404 }));

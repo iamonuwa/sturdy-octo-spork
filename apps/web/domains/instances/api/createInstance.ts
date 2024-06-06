@@ -5,7 +5,7 @@ import { CreateVm } from "@machines/model/vm"
 import { useToast } from "@machines/ui"
 
 const createInstance = async (payload: CreateVm) => {
-    const response = await fetch("http://localhost:57091/apis/vms", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms`, {
         method: "POST",
         body: JSON.stringify(payload),
     })

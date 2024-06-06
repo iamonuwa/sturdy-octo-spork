@@ -3,7 +3,7 @@ import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 
 const fetchInstance = async (id: string) => {
-    const response = await fetch(`http://localhost:57091/apis/vms/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms/${id}`, {
         method: "GET"
     })
 

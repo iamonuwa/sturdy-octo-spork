@@ -19,7 +19,7 @@ export const Header = () => {
           <Link
             key={index}
             href={route.href}
-            className="text-gray-500 dark:text-gray-400"
+            className="text-gray-500 w-20 dark:text-gray-400"
             prefetch={false}
           >
             {route.title}

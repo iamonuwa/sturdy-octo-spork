@@ -11,3 +11,5 @@ export * from "./form";
 export * from "./select";
 export * from "./skeleton";
 export * from "./avatar";
+export * from "./card";
+export * from "./textarea";

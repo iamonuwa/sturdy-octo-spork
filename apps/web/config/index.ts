@@ -3,9 +3,8 @@ export const ROUTES = [
         title: "Instances",
         href: "/",
     }, {
-        title: "Configurations",
-        href: "/",
-        disabled: true
+        title: "Source tree",
+        href: "/source-tree",
     }, {
         title: "Logs",
         href: "/",
