@@ -42,8 +42,8 @@ importers:
         specifier: ^2.5.3
         version: 2.5.3
       itty-router:
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^5.0.17
+        version: 5.0.17
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -9147,12 +9147,12 @@ packages:
       set-function-name: 2.0.2
     dev: true
 
-  /itty-router@3.0.12:
-    resolution: {integrity: sha512-s98XTPhle6GGbaFf0kYrOD3Q8gyhnqvOqkwYijC3AmkceNKqWUp13YHg6dWmqmVv4pP7l7c94XI92I0EXVGO0w==}
-    dev: false
-
   /itty-router@4.0.26:
     resolution: {integrity: sha512-GBcmhxQRvIQ7fuzXPlvfeQcN6O7VGhctzdG9WHIcEcaRYH4FvDpMxuSWRIAxQrIM+nxtfxK0/bR78ATvb4LC5Q==}
+    dev: false
+
+  /itty-router@5.0.17:
+    resolution: {integrity: sha512-ZHnPI0OOyTTLuNp2FdciejYaK4Wl3ZV3O0yEm8njOGggh/k/ek3BL7X2I5YsCOfc5vLhIJgj3Z4pUtLs6k9Ucg==}
     dev: false
 
   /jackspeak@2.3.6:

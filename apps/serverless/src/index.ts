@@ -16,6 +16,7 @@ import { CreateInstance, InstanceList, UpdateInstanceStatus } from "./handlers/i
 import { ExchangeToken } from "./handlers/exchange";
 import { InstanceInsights } from "./handlers/insights";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
+import { cors } from 'itty-router'
 
 const router = OpenAPIRouter({
 	schema: {
@@ -26,6 +27,8 @@ const router = OpenAPIRouter({
 		},
 	},
 });
+
+const { corsify } = cors()
 
 router.get("/apis/instances/", InstanceList);
 router.post("/apis/instances/", CreateInstance);
@@ -40,5 +43,7 @@ router.original.get("/", (request) =>
 router.all("*", () => new Response("Not Found.", { status: 404 }));
 
 export default {
-	fetch: router.handle
+	fetch: async (request, env, ctx) => {
+		return router.handle(request, env, ctx).then(corsify)
+	},
 }

@@ -8,6 +8,7 @@ import {
 import { createVmSchema, updateVmSchema } from '@machines/model/vm';
 
 import { IRequest } from 'itty-router';
+import { authenticate } from '../utils/authenticate';
 import { connectDB } from '../utils/supabase';
 
 const VmInstance = {
@@ -26,6 +27,13 @@ export class InstanceList extends OpenAPIRoute {
 	static schema = {
 		tags: ['Instances'],
 		summary: 'Fetch VMs list for current user',
+		requestBody: {
+			"Authorization": {
+				schema: {
+					token: new Str({ required: true }),
+				},
+			},
+		},
 		responses: {
 			'200': {
 				description: 'VMs list fetched successfully',
@@ -41,10 +49,11 @@ export class InstanceList extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
 		try {
+			const userId = await authenticate(request, env);
 			const { data, error, count } = await connectDB(env)
 				.from('vms')
 				.select('*', { count: 'exact' })
-				// .eq('creator', env.user)
+				.eq('creator', userId)
 				.order('created_at', { ascending: false })
 
 			if (error) {
@@ -83,12 +92,12 @@ export class CreateInstance extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
 		try {
+			await authenticate(request, env);
+
 			const payload = await request.json();
 			const parsedPayload = createVmSchema.safeParse(payload);
 			if (!parsedPayload.success) {
-				return {
-					message: 'Invalid request payload.'
-				}
+				throw new Error(parsedPayload.error.message);
 			}
 
 			const { data, error } = await connectDB(env)
@@ -99,7 +108,6 @@ export class CreateInstance extends OpenAPIRoute {
 				})
 
 			if (error) {
-				console.error('Supabase error:', error.message);
 				throw new Error(`Failed to create new vm instance. Reason - ${error.message}`);
 			}
 
@@ -139,6 +147,8 @@ export class UpdateInstanceStatus extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
 		try {
+			await authenticate(request, env);
+
 			const payload = await request.json();
 			const parsedPayload = updateVmSchema.safeParse(payload);
 

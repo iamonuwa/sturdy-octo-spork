@@ -6,6 +6,7 @@ import {
 } from '@cloudflare/itty-router-openapi'
 
 import { IRequest } from 'itty-router';
+import { authenticate } from '../utils/authenticate';
 import { connectDB } from '../utils/supabase';
 
 const User = {
@@ -35,6 +36,7 @@ export class CurrentUser extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
 		try {
+			await authenticate(request, env);
 			const { data, error, count } = await connectDB(env)
 				.from('accounts')
 				.select('*', { count: 'exact' })

@@ -16,15 +16,6 @@ export class ExchangeToken extends OpenAPIRoute {
 	static schema = {
 		tags: ['Auth'],
 		summary: 'Exchange user token from privy for auth token',
-		requestBody: {
-			content: {
-				'application/json': {
-					schema: {
-						token: new Str({ required: true }),
-					},
-				},
-			},
-		},
 		responses: {
 			'200': {
 				description: 'Token exchanged successfully',
