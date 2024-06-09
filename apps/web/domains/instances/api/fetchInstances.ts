@@ -8,7 +8,7 @@ const fetchInstances = async (token: string | undefined) => {
 
     if (!token) return
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

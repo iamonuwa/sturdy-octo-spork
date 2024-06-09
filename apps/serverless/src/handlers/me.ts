@@ -6,7 +6,6 @@ import {
 } from '@cloudflare/itty-router-openapi'
 
 import { IRequest } from 'itty-router';
-import { authenticate } from '../utils/authenticate';
 import { connectDB } from '../utils/supabase';
 
 const User = {
@@ -36,18 +35,18 @@ export class CurrentUser extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
 		try {
-			await authenticate(request, env);
 			const { data, error, count } = await connectDB(env)
 				.from('accounts')
-				.select('*', { count: 'exact' })
-				.eq('creator', env.user)
+				.select('user_id, identifier, display_name, photo_url, provider, created_at', { count: 'exact' })
+				.eq('id', env.user)
 
 			if (error) {
-				throw new Error(`Failed to fetch user data. Reason - ${error.message}`);
+				console.log(`Failed to fetch user data. Reason - ${error.message}`)
+				throw new Error("Failed to fetch user data.");
 			}
 
 			return {
-				data,
+				data: data[0],
 				message: 'User data fetched successfully.',
 				count
 			}

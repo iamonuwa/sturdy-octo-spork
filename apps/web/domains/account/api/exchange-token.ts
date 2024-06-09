@@ -6,7 +6,7 @@ import { usePrivy } from "@privy-io/react-auth"
 import { useToast } from "@machines/ui"
 
 const exchangeToken = async (token: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/exchange`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/exchange/`, {
         method: "POST",
         body: JSON.stringify({
             token
@@ -18,9 +18,9 @@ const exchangeToken = async (token: string) => {
         throw new Error(cause.message)
     }
 
-    const { authToken } = await response.json()
+    const { data } = await response.json()
 
-    return authToken
+    return data
 }
 
 export const useExchangeToken = () => {

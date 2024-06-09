@@ -73,7 +73,7 @@ export class ExchangeToken extends OpenAPIRoute {
 			const offset = 30 // 30 seconds
 
 			const authToken = await jwt.sign({
-				user_id: accountId,
+				sub: accountId as unknown as string,
 				nbf: now - offset,
 			}, env.JWT_SECRET);
 

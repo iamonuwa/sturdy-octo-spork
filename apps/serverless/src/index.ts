@@ -17,7 +17,8 @@ import { CurrentUser } from "./handlers/me";
 import { ExchangeToken } from "./handlers/exchange";
 import { InstanceInsights } from "./handlers/insights";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
-import { cors } from 'itty-router'
+import { authMiddleware } from "./middlewares/auth.middleware";
+import { createCors } from "itty-router";
 
 const router = OpenAPIRouter({
 	schema: {
@@ -29,18 +30,27 @@ const router = OpenAPIRouter({
 	},
 });
 
-const { corsify } = cors()
+const { preflight, corsify } = createCors({
+	origins: ["*"],
+	methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
+	headers: {
+		"Access-Control-Allow-Credentials": true,
+		"Access-Control-Allow-Headers": "Content-Type, Authorization",
+	},
+});
 
-router.get("/apis/instances/", InstanceList);
-router.post("/apis/instances/", CreateInstance);
-router.patch("/apis/instances/{id}/", UpdateInstanceStatus);
+router.get("/apis/instances/", authMiddleware, InstanceList);
+router.post("/apis/instances/", authMiddleware, CreateInstance);
+router.patch("/apis/instances/{id}/", authMiddleware, UpdateInstanceStatus);
 router.post('/apis/exchange/', ExchangeToken);
-router.get("/apis/insights/", InstanceInsights);
-router.get("/apis/me/", CurrentUser);
+router.get("/apis/insights/", authMiddleware, InstanceInsights);
+router.get("/apis/me/", authMiddleware, CurrentUser);
 
 router.original.get("/", (request) =>
 	Response.redirect(`${request.url}docs`, 302)
 );
+
+router.all('*', preflight)
 
 router.all("*", () => new Response("Not Found.", { status: 404 }));
 

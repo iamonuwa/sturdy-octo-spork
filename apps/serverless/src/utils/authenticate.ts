@@ -31,6 +31,7 @@ export async function authenticate(request: IRequest, env: any): Promise<string 
 			throw new Error('Failed to decode token.');
 		}
 
+		request.user = payload.sub;
 		env.user = payload.sub;
 		return payload.sub;
 	} catch (error) {

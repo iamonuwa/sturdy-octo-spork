@@ -5,7 +5,7 @@ import { UpdateVm } from "@machines/model/vm"
 import { useToast } from "@machines/ui"
 
 const updateInstance = async (payload: UpdateVm) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms/${payload.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances/${payload.id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
     })

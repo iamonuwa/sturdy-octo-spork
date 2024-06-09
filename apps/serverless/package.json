@@ -20,7 +20,7 @@
 		"@privy-io/server-auth": "^1.7.3",
 		"@supabase/supabase-js": "^2.43.4",
 		"@tsndr/cloudflare-worker-jwt": "^2.5.3",
-		"itty-router": "^5.0.17",
+		"itty-router": "^4.2.2",
 		"jsonwebtoken": "^9.0.2"
 	}
 }

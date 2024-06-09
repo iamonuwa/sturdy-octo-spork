@@ -8,7 +8,6 @@ import {
 import { createVmSchema, updateVmSchema } from '@machines/model/vm';
 
 import { IRequest } from 'itty-router';
-import { authenticate } from '../utils/authenticate';
 import { connectDB } from '../utils/supabase';
 
 const VmInstance = {
@@ -36,7 +35,7 @@ export class InstanceList extends OpenAPIRoute {
 		},
 		responses: {
 			'200': {
-				description: 'VMs list fetched successfully',
+				description: 'VM instances list fetched successfully',
 				schema: {
 					metadata: {},
 					data: [VmInstance],
@@ -47,13 +46,12 @@ export class InstanceList extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
+	async handle(_, env: any) {
 		try {
-			const userId = await authenticate(request, env);
 			const { data, error, count } = await connectDB(env)
-				.from('vms')
+				.from('instances')
 				.select('*', { count: 'exact' })
-				.eq('creator', userId)
+				.eq('creator', env.user)
 				.order('created_at', { ascending: false })
 
 			if (error) {
@@ -63,7 +61,7 @@ export class InstanceList extends OpenAPIRoute {
 
 			return {
 				data,
-				message: 'VMs retrieved successfully.',
+				message: 'VM instances retrieved successfully.',
 				count
 			}
 		} catch (error) {
@@ -90,10 +88,8 @@ export class CreateInstance extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
+	async handle(request: IRequest, env: any) {
 		try {
-			await authenticate(request, env);
-
 			const payload = await request.json();
 			const parsedPayload = createVmSchema.safeParse(payload);
 			if (!parsedPayload.success) {
@@ -101,9 +97,10 @@ export class CreateInstance extends OpenAPIRoute {
 			}
 
 			const { data, error } = await connectDB(env)
-				.from('vms')
+				.from('instances')
 				.insert({
 					...parsedPayload.data,
+					creator: env.user,
 					last_updated_at: new Date(),
 				})
 
@@ -145,9 +142,8 @@ export class UpdateInstanceStatus extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
+	async handle(request: IRequest, env: any) {
 		try {
-			await authenticate(request, env);
 
 			const payload = await request.json();
 			const parsedPayload = updateVmSchema.safeParse(payload);
@@ -159,7 +155,7 @@ export class UpdateInstanceStatus extends OpenAPIRoute {
 			}
 
 			const { data, error } = await connectDB(env)
-				.from('vms')
+				.from('instances')
 				.update({ status: parsedPayload.data.status, last_updated_at: new Date() })
 				.eq('id', request.params.id)
 				.select('*');
