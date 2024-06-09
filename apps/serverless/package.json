@@ -10,12 +10,17 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240603.0",
-		"itty-router": "^3.0.12",
+		"@types/jsonwebtoken": "^9.0.6",
 		"typescript": "^5.0.4",
-		"wrangler": "^3.0.0"
+		"wrangler": "^3.60.0"
 	},
 	"dependencies": {
+		"@cloudflare/itty-router-openapi": "^1.1.1",
+		"@machines/model": "*",
+		"@privy-io/server-auth": "^1.7.3",
 		"@supabase/supabase-js": "^2.43.4",
-		"@machines/model": "*"
+		"@tsndr/cloudflare-worker-jwt": "^2.5.3",
+		"itty-router": "^3.0.12",
+		"jsonwebtoken": "^9.0.2"
 	}
 }

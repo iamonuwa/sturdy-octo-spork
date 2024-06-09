@@ -1,7 +1,8 @@
 import { FrameIcon } from "lucide-react";
 import Link from "next/link";
+// import { ProfileDialog } from "@/domains/account/components/ProfileDialog";
 import { ROUTES } from "@/config";
-import { UserProfile } from "@/domains/account/components/Profile";
+import { User } from "@/domains/account/components/User";
 
 export const Header = () => {
   return (
@@ -14,12 +15,12 @@ export const Header = () => {
         <FrameIcon className="w-6 h-6" />
         <span className="sr-only">VM Manager</span>
       </Link>
-      <nav className="hidden font-medium sm:flex flex-row items-center gap-5 text-sm lg:gap-6">
+      <nav className="flex flex-row items-center gap-5 lg:gap-6">
         {ROUTES.map((route, index) => (
           <Link
             key={index}
             href={route.href}
-            className="text-gray-500 w-20 dark:text-gray-400"
+            className="text-gray-500 font-medium text-sm w-20 dark:text-gray-400"
             prefetch={false}
           >
             {route.title}
@@ -28,7 +29,8 @@ export const Header = () => {
       </nav>
       <div className="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <div className="ml-auto">
-          <UserProfile />
+          {/* <ProfileDialog /> */}
+          <User />
         </div>
       </div>
     </header>

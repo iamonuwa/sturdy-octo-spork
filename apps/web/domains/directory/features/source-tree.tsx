@@ -3,9 +3,14 @@
 import { Card, CardContent } from "@machines/ui";
 
 import React from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
+import { PrismAsyncLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { Tree } from "../components/Tree";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import css from "react-syntax-highlighter/dist/cjs/languages/prism/css";
+import diff from "react-syntax-highlighter/dist/cjs/languages/prism/diff";
+import javascript from "react-syntax-highlighter/dist/cjs/languages/prism/javascript";
+import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
+import typescript from "react-syntax-highlighter/dist/cjs/languages/prism/typescript";
 
 const codestring = `
 "use client";
@@ -46,6 +51,20 @@ export const SourceTree = () => {
 };
 `;
 
+const languages = {
+  javascript: "javascript",
+  typescript: "typescript",
+  diff: "diff",
+  tsx: "tsx",
+  css: "css",
+};
+
+SyntaxHighlighter.registerLanguage(languages.javascript, javascript);
+SyntaxHighlighter.registerLanguage(languages.typescript, typescript);
+SyntaxHighlighter.registerLanguage(languages.diff, diff);
+SyntaxHighlighter.registerLanguage(languages.tsx, tsx);
+SyntaxHighlighter.registerLanguage(languages.css, css);
+
 export const SourceTree = () => {
   return (
     <Card className="bg-primary">
@@ -66,6 +85,8 @@ export const SourceTree = () => {
         <SyntaxHighlighter
           language="javascript"
           style={a11yDark}
+          wrapLines
+          wrapLongLines
           className="code-output flex-1 p-4 max-h-[700px] overflow-auto"
           showLineNumbers
         >

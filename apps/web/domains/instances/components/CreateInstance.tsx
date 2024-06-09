@@ -31,7 +31,7 @@ import {
 } from "@machines/ui";
 
 import { Input } from "@machines/ui";
-import { useCreateInstance } from "../api/createInstance";
+import { useCreateInstance } from "../api/create-instance";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 

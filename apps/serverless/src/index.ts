@@ -11,22 +11,34 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import apiRouter from './router';
+import { CreateInstance, InstanceList, UpdateInstanceStatus } from "./handlers/instances";
+
+import { ExchangeToken } from "./handlers/exchange";
+import { InstanceInsights } from "./handlers/insights";
+import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
+
+const router = OpenAPIRouter({
+	schema: {
+		info: {
+			title: "Machine Apis",
+			description: "Develop a front-end application that manages virtual machine (VM) instances and integrates with serverless functions for infrastructure management. The application should offer a robust user interface for VM lifecycle management, data visualization, and file management, with secure user authentication.",
+			version: "1.0",
+		},
+	},
+});
+
+router.get("/apis/instances/", InstanceList);
+router.post("/apis/instances/", CreateInstance);
+router.patch("/apis/instances/{id}/", UpdateInstanceStatus);
+router.post('/apis/exchange/', ExchangeToken);
+router.get("/apis/insights/", InstanceInsights);
+
+router.original.get("/", (request) =>
+	Response.redirect(`${request.url}docs`, 302)
+);
+
+router.all("*", () => new Response("Not Found.", { status: 404 }));
 
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		const corsHeaders = {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "GET,HEAD,POST,PATCH,OPTIONS",
-			"Access-Control-Max-Age": "86400",
-		};
-		return apiRouter.handle(request, env, ctx).then((response) => {
-			return new Response(response.body, {
-				headers: {
-					...response.headers,
-					...corsHeaders,
-				}
-			});
-		});
-	},
-} satisfies ExportedHandler<Env>
+	fetch: router.handle
+}

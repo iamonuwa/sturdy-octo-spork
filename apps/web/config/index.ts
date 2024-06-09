@@ -5,14 +5,6 @@ export const ROUTES = [
     }, {
         title: "Source tree",
         href: "/source-tree",
-    }, {
-        title: "Logs",
-        href: "/",
-        disabled: true
-    }, {
-        title: "Settings",
-        href: "/",
-        disabled: true
     },
 ]
 

@@ -1,9 +1,10 @@
+import { Fragment } from "react";
 import { SourceTree } from "@/domains/directory/features/source-tree";
 
 export default function Page() {
   return (
-    <div className="container h-full py-6">
+    <Fragment>
       <SourceTree />
-    </div>
+    </Fragment>
   );
 }

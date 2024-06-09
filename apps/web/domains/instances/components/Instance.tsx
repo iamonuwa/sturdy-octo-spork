@@ -1,4 +1,9 @@
-import { CpuIcon, MemoryStickIcon, MoveHorizontalIcon } from "lucide-react";
+import {
+  CpuIcon,
+  Dot,
+  MemoryStickIcon,
+  MoveHorizontalIcon,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +13,7 @@ import {
 } from "@machines/ui";
 
 import { Button } from "@machines/ui";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { FC } from "react";
 import Link from "next/link";
 import { Separator } from "@machines/ui";
@@ -88,7 +94,7 @@ export const Instance: FC<Props> = (props) => {
             size="icon"
             className="absolute top-4 right-4"
           >
-            <MoveHorizontalIcon className="w-4 h-4" />
+            <DotsHorizontalIcon className="h-4 w-4" />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </DropdownMenuTrigger>

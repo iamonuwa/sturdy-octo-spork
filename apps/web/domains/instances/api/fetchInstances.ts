@@ -1,11 +1,19 @@
 'use client';
 
+import Cookies from 'js-cookie'
 import { Vm } from "@/models/vm"
 import { useQuery } from "@tanstack/react-query"
 
-const fetchInstances = async () => {
+const fetchInstances = async (token: string | undefined) => {
+
+    if (!token) return
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/vms`, {
-        method: "GET"
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
     })
 
     if (!response.ok) {
@@ -19,8 +27,11 @@ const fetchInstances = async () => {
 }
 
 export const useVmInstances = () => {
+    const token = Cookies.get("authToken")
+
     return useQuery<string[], Error, Vm[]>({
         queryKey: ["instances"],
-        queryFn: fetchInstances
+        enabled: !!token,
+        queryFn: () => fetchInstances(token)
     })
 }
