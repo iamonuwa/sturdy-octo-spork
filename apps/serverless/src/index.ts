@@ -13,6 +13,7 @@
 
 import { CreateInstance, InstanceList, UpdateInstanceStatus } from "./handlers/instances";
 
+import { CurrentUser } from "./handlers/me";
 import { ExchangeToken } from "./handlers/exchange";
 import { InstanceInsights } from "./handlers/insights";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
@@ -35,6 +36,7 @@ router.post("/apis/instances/", CreateInstance);
 router.patch("/apis/instances/{id}/", UpdateInstanceStatus);
 router.post('/apis/exchange/', ExchangeToken);
 router.get("/apis/insights/", InstanceInsights);
+router.get("/apis/me/", CurrentUser);
 
 router.original.get("/", (request) =>
 	Response.redirect(`${request.url}docs`, 302)
