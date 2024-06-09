@@ -2,9 +2,12 @@ import { Vm } from "@/models/vm"
 import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 
-const fetchInstanceMetrics = async (id: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances/${id}/metrics`, {
-        method: "GET"
+const fetchInstance = async (id: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
     })
 
     if (!response.ok) {
@@ -17,12 +20,12 @@ const fetchInstanceMetrics = async (id: string) => {
     return data
 }
 
-export const useVmInstanceMetrics = () => {
+export const useVmInstanceQuery = () => {
     const { id } = useParams<{ id: string }>()
 
     return useQuery<string[], Error, Vm>({
-        queryKey: ["fetchInstanceMetrics", id],
+        queryKey: ["instance", id],
         enabled: !!id,
-        queryFn: () => fetchInstanceMetrics(id)
+        queryFn: () => fetchInstance(id)
     })
 }

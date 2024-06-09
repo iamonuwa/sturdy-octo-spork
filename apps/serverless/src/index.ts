@@ -11,7 +11,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { CreateInstance, InstanceList, UpdateInstanceStatus } from "./handlers/instances";
+import { CreateInstance, FetchInstance, FetchInstances, UpdateInstanceStatus } from "./handlers/instances";
 
 import { CurrentUser } from "./handlers/me";
 import { ExchangeToken } from "./handlers/exchange";
@@ -39,11 +39,12 @@ const { preflight, corsify } = createCors({
 	},
 });
 
-router.get("/apis/instances/", authMiddleware, InstanceList);
-router.post("/apis/instances/", authMiddleware, CreateInstance);
-router.patch("/apis/instances/{id}/", authMiddleware, UpdateInstanceStatus);
-router.post('/apis/exchange/', ExchangeToken);
-router.get("/apis/insights/", authMiddleware, InstanceInsights);
+router.get("/apis/instances", FetchInstances);
+router.get("/apis/instances/:id", FetchInstance);
+router.post("/apis/instances", authMiddleware, CreateInstance);
+router.patch("/apis/instances/:id", authMiddleware, UpdateInstanceStatus);
+router.post('/apis/exchange', ExchangeToken);
+router.get("/apis/insights", authMiddleware, InstanceInsights);
 router.get("/apis/me/", authMiddleware, CurrentUser);
 
 router.original.get("/", (request) =>

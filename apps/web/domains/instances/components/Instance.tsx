@@ -1,9 +1,4 @@
-import {
-  CpuIcon,
-  Dot,
-  MemoryStickIcon,
-  MoveHorizontalIcon,
-} from "lucide-react";
+import { CpuIcon, MemoryStickIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,40 +15,61 @@ import { Separator } from "@machines/ui";
 import { Vm } from "@/models/vm";
 import { cn } from "@machines/ui/cn";
 import { formatDistanceStrict } from "date-fns";
-import { useUpdateInstance } from "../api/updateInstance";
+import { isAddress } from "viem";
+import { shortenHex } from "@/utils/common";
+import { useAccount } from "wagmi";
+import { useCurrentUser } from "@/domains/account/api/me";
+import { useUpdateInstanceMutation } from "../api/updateInstanceMutation";
 
 interface Props extends Vm {}
 
 export const Instance: FC<Props> = (props) => {
-  const { mutateAsync: updateInstance } = useUpdateInstance();
+  const { data, isLoading } = useCurrentUser();
+  const { mutateAsync: updateInstance } = useUpdateInstanceMutation();
+  const { address } = useAccount();
   const {
-    cpuCores,
+    cpu,
     created_at,
     last_updated_at,
-    diskSizeGB,
+    disk,
     id,
     name,
+    region,
     status,
+    from,
   } = props;
   return (
     <div className="flex flex-col lg:flex-row bg-white text-sm p-2 relative dark:bg-gray-950">
       <div className="p-2 grid gap-1 flex-1">
-        <div className="font-medium">{name}</div>
+        <span className="font-medium">{name}</span>
         <div className="flex gap-2">
           <span className="text-gray-500 dark:text-gray-400 capitalize">
-            {String(status).toLocaleLowerCase()}
+            {isAddress(from.identifier)
+              ? shortenHex(from.identifier, 8)
+              : from.display_name}
           </span>
         </div>
       </div>
       <Separator className="my-2 lg:hidden" />
-      <div className="p-2 grid gap-1 flex-1">
-        <div className="flex items-start gap-2">
-          <span
-            className={cn("inline-flex w-3 h-3 rounded-full translate-y-1", {
-              "bg-red-400": status === "TERMINATED",
-              "bg-green-400": status === "RUNNING",
-            })}
-          />
+      <div className="p-2 grid gap-1 flex-1 grid-col-1">
+        <span className="lg:ml-6">{region}</span>
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-3 w-3">
+            <span
+              className={cn(
+                "absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75",
+                {
+                  "bg-green-400 animate-ping": status === "RUNNING",
+                }
+              )}
+            />
+            <span
+              className={cn("relative inline-flex rounded-full h-3 w-3", {
+                "bg-green-400": status === "RUNNING",
+                "bg-red-400": status === "TERMINATED",
+              })}
+            />
+          </span>
           <span className="flex gap-1 capitalize">
             {String(status).toLocaleLowerCase()}
             {status === "RUNNING" ? (
@@ -72,11 +88,11 @@ export const Instance: FC<Props> = (props) => {
       <div className="p-2 grid gap-1 flex-1">
         <div className="flex items-center gap-2">
           <CpuIcon className="w-4 h-4" />
-          {cpuCores} vCPUs
+          {cpu} vCPUs
         </div>
         <div className="flex items-center gap-2">
           <MemoryStickIcon className="w-4 h-4" />
-          {diskSizeGB} GB RAM
+          {disk} GB RAM
         </div>
       </div>
       <Separator className="my-2 lg:hidden" />
@@ -102,20 +118,22 @@ export const Instance: FC<Props> = (props) => {
           <DropdownMenuItem asChild>
             <Link href={`/instances/${id}`}>View Instance</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/instances/${id}`}>Manage</Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() =>
-              updateInstance({
-                id,
-                status: status === "RUNNING" ? "TERMINATED" : "RUNNING",
-              })
-            }
-          >
-            {status === "RUNNING" ? "Terminate" : "Restart"}
-          </DropdownMenuItem>
+          {(data || !isLoading) &&
+          // manually check if the user is the creator of the instance
+          // in a real-world scenario, this should be done on the server
+          isAddress(data?.identifier as `0x${string}`) &&
+          data?.identifier === address ? (
+            <DropdownMenuItem
+              onClick={() =>
+                updateInstance({
+                  id,
+                  status: status === "RUNNING" ? "TERMINATED" : "RUNNING",
+                })
+              }
+            >
+              {status === "RUNNING" ? "Terminate" : "Restart"}
+            </DropdownMenuItem>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

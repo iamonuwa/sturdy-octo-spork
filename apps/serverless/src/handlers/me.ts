@@ -13,7 +13,7 @@ const User = {
 	identifier: new Str({ required: true }),
 	display_name: new Str({ required: false }),
 	user_id: new Int({ required: true }),
-	photo_url: new String({ required: false }),
+	photo_url: new Str({ required: false }),
 	provider: new Str({ required: true }),
 	last_updated_at: new DateOnly(),
 }
@@ -33,11 +33,11 @@ export class CurrentUser extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
+	async handle(_: IRequest, env: any) {
 		try {
 			const { data, error, count } = await connectDB(env)
 				.from('accounts')
-				.select('user_id, identifier, display_name, photo_url, provider, created_at', { count: 'exact' })
+				.select('id, user_id, identifier, display_name, photo_url, provider, created_at', { count: 'exact' })
 				.eq('id', env.user)
 
 			if (error) {

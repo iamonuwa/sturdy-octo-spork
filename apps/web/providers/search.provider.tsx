@@ -12,7 +12,7 @@ import React, {
 } from "react";
 
 import Fuse from "fuse.js";
-import { useVmInstances } from "@/domains/instances/api/fetchInstances";
+import { useVmInstancesQuery } from "@/domains/instances/api/instancesQuery";
 
 // Define actions
 const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
@@ -74,7 +74,7 @@ const fuseOptions = {
 // Context provider component
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(searchReducer, initialState);
-  const { data } = useVmInstances();
+  const { data } = useVmInstancesQuery();
   const fuse = useMemo(() => new Fuse(data || [], fuseOptions), [data]);
 
   useEffect(() => {

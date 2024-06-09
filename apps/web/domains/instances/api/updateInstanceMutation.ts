@@ -1,13 +1,18 @@
 import { Vm, VmAPIResponse } from "@/models/vm"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
+import Cookies from 'js-cookie'
 import { UpdateVm } from "@machines/model/vm"
 import { useToast } from "@machines/ui"
 
-const updateInstance = async (payload: UpdateVm) => {
+const updateInstance = async (payload: UpdateVm, token: string | undefined) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances/${payload.id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
+        headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        }
     })
 
     if (!response.ok) {
@@ -18,12 +23,13 @@ const updateInstance = async (payload: UpdateVm) => {
     return await response.json()
 }
 
-export const useUpdateInstance = () => {
+export const useUpdateInstanceMutation = () => {
     const queryClient = useQueryClient()
     const { toast } = useToast()
+    const token = Cookies.get("authToken")
 
     return useMutation<VmAPIResponse, Error, UpdateVm>({
-        mutationFn: updateInstance,
+        mutationFn: (payload) => updateInstance(payload, token),
         onError: (error) => {
             toast({
                 title: "Error updating instance",

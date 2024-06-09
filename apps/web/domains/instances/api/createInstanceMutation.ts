@@ -1,13 +1,18 @@
 import { Vm, VmAPIResponse } from "@/models/vm"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
+import Cookies from 'js-cookie'
 import { CreateVm } from "@machines/model/vm"
 import { useToast } from "@machines/ui"
 
-const createInstance = async (payload: CreateVm) => {
+const createInstance = async (payload: CreateVm, token: string | undefined) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/instances`, {
         method: "POST",
         body: JSON.stringify(payload),
+        headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        }
     })
 
     if (!response.ok) {
@@ -18,12 +23,13 @@ const createInstance = async (payload: CreateVm) => {
     return await response.json()
 }
 
-export const useCreateInstance = () => {
+export const useCreateInstanceMutation = () => {
     const queryClient = useQueryClient()
     const { toast } = useToast()
+    const token = Cookies.get("authToken")
 
     return useMutation<VmAPIResponse, Error, CreateVm>({
-        mutationFn: createInstance,
+        mutationFn: (payload) => createInstance(payload, token),
         onError: (error) => {
             toast({
                 title: "Error creating instance",

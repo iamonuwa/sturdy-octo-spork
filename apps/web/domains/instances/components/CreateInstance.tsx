@@ -31,12 +31,15 @@ import {
 } from "@machines/ui";
 
 import { Input } from "@machines/ui";
-import { useCreateInstance } from "../api/create-instance";
+import { useCreateInstanceMutation } from "../api/createInstanceMutation";
+import { useCurrentUser } from "@/domains/account/api/me";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export const CreateInstance = () => {
-  const { mutateAsync: createInstance, isPending } = useCreateInstance();
+  const { mutateAsync: createInstance, isPending } =
+    useCreateInstanceMutation();
+  const { data, isLoading: isCurrentUserLoading, isError } = useCurrentUser();
 
   const form = useForm<CreateVm>({
     defaultValues: {},
@@ -44,9 +47,12 @@ export const CreateInstance = () => {
     resolver: zodResolver(createVmSchema),
   });
 
-  const isLoading = isPending || form.formState.isSubmitting;
+  const isLoading =
+    isPending || isCurrentUserLoading || form.formState.isSubmitting;
 
   const disabled = isLoading || Object.values(form.formState.errors).length > 0;
+
+  if (!data || isError) return null;
 
   return (
     <Dialog>
@@ -115,7 +121,7 @@ export const CreateInstance = () => {
               />
               <FormField
                 control={form.control}
-                name="cpuCores"
+                name="cpu"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-3">
                     <FormLabel>CPU Cores</FormLabel>
@@ -145,7 +151,7 @@ export const CreateInstance = () => {
               />
               <FormField
                 control={form.control}
-                name="memoryGB"
+                name="memory"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-3">
                     <FormLabel>Memory (in GB)</FormLabel>
@@ -175,7 +181,7 @@ export const CreateInstance = () => {
               />
               <FormField
                 control={form.control}
-                name="diskSizeGB"
+                name="disk"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-4">
                     <FormLabel>Disk Size (in GB)</FormLabel>

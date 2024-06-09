@@ -40,7 +40,7 @@ export class InstanceInsights extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, payload: Record<string, string>) {
+	async handle(request: IRequest, env: any, _: any, payload: Record<string, string>) {
 		try {
 			const { instance } = payload;
 
@@ -51,7 +51,8 @@ export class InstanceInsights extends OpenAPIRoute {
 				.order('created_at', { ascending: false })
 
 			if (error) {
-				throw new Error(`Failed to retrieve metrics. Reason - ${error.message}`);
+				console.log(`Failed to retrieve insights for instance ${instance}. Reason - ${error.message}`)
+				throw new Error("Failed to retrieve insights");
 			}
 
 			return {

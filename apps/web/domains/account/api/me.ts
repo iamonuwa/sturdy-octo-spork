@@ -24,7 +24,7 @@ const currentUser = async (token: string | undefined) => {
 export const useCurrentUser = () => {
     const token = Cookies.get("authToken")
 
-    return useQuery<undefined, Error, User>({
+    return useQuery<void, Error, User>({
         queryKey: ["currentUser"],
         enabled: !!token,
         queryFn: () => currentUser(token)
