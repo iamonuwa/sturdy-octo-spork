@@ -58,7 +58,7 @@
 
 3. **Instance Management**:
    - Users can perform CRUD operations on VM instances via the Wrangler API.
-   - The API endpoints (e.g., `GET /instances`, `POST /instances`, `PATCH /vms/:id`) interact with the Supabase database to manage VM data.
+   - The API endpoints (e.g., `GET /instances`, `POST /instances`, `PATCH /instances/:id`) interact with the Supabase database to manage VM data.
    - Each VM instance is linked to a user.
 
 4. **Insights and Monitoring**:
