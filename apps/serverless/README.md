@@ -149,6 +149,10 @@ pnpm dev
 bun dev
 ```
 
+::: Follow this guide to add local variables to your project
+[Adding Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
+::: You can choose to make a copy of the `dev.vars` file and rename it to `.dev.vars` and add your environment variables.
+
 ## Deployment
 
 1. Ensure you have [wrangler setup](https://developers.cloudflare.com/workers/wrangler/install-and-update/) locally.
