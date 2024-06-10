@@ -135,7 +135,7 @@ export class CreateInstance extends OpenAPIRoute {
 					creator: env.user,
 					last_updated_at: new Date(),
 				})
-				.select('*')
+				.select(`*, from:creator(identifier, display_name)`)
 				.single();
 
 			if (error) {
