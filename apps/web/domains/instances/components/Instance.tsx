@@ -121,7 +121,9 @@ export const Instance: FC<Props> = (props) => {
           <DropdownMenuItem asChild>
             <Link href={`/instances/${id}/source-tree`}>View Source tree</Link>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {(data || !isLoading) && data?.identifier === from.identifier ? (
+            <DropdownMenuSeparator />
+          ) : null}
           {(data || !isLoading) && data?.identifier === from.identifier ? (
             <DropdownMenuItem
               onClick={() =>
