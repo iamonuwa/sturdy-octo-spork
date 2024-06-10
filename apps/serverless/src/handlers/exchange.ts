@@ -6,6 +6,7 @@ import {
 import { IRequest } from 'itty-router';
 import { PrivyClient } from '@privy-io/server-auth';
 import { connectDB } from '../utils/supabase';
+import { getId } from '../utils/id'
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
 const Auth = {
@@ -28,7 +29,7 @@ export class ExchangeToken extends OpenAPIRoute {
 		},
 	}
 
-	async handle(request: IRequest, env: any, context: any, data: Record<string, any>) {
+	async handle(request: IRequest, env: any) {
 		try {
 			const payload = await request.json() as { token: string };
 
@@ -38,21 +39,22 @@ export class ExchangeToken extends OpenAPIRoute {
 
 			const user = await client.getUser(userId);
 
-			const { data, error } = await connectDB(env).from('accounts').select('id').eq('user_id', user.id).single();
+			const { data, error } = await connectDB(env).from('accounts').select('*', { count: 'exact' }).eq('user_id', getId(user.id));
 
 			if (error) {
-				throw new Error(`Failed to authenticate user. Reason - ${error.message}`);
+				console.log(`Failed to authenticate user. Reason: ${error.message}`)
+				throw new Error("Failed to authenticate user.");
 			}
 
 			let accountId = null
 
-			if (!data) {
+			if (data.length === 0) {
 				const userObject = {
 					provider: user.wallet ? 'siwe' : user.google ? 'google' : 'twitter',
 					photo_url: user.twitter?.profilePictureUrl || 'N/A',
 					display_name: user.google?.name || user.twitter?.name || 'N/A',
 					identifier: user.wallet?.address || user.google?.email || user.twitter?.username,
-					user_id: user.id,
+					user_id: getId(user.id),
 				};
 
 				const { data, error } = await connectDB(env)
@@ -66,7 +68,7 @@ export class ExchangeToken extends OpenAPIRoute {
 
 				accountId = data[0].id;
 			} else {
-				accountId = data.id;
+				accountId = data[0].id;
 			}
 
 			const now = Math.floor(Date.now() / 1000)
@@ -82,6 +84,7 @@ export class ExchangeToken extends OpenAPIRoute {
 				message: 'User authenticated successfully'
 			}
 		} catch (error) {
+			console.log('Error from catch ', JSON.stringify(error, null, 2))
 			return {
 				message: error instanceof Error ? error.message : 'An unexpected error occurred.'
 			}
