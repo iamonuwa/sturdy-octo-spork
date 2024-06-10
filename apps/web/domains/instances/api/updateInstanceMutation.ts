@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import Cookies from 'js-cookie'
 import { UpdateVm } from "@machines/model/vm"
+import { useParams } from "next/navigation"
 import { useToast } from "@machines/ui"
 
 const updateInstance = async (payload: UpdateVm, token: string | undefined) => {

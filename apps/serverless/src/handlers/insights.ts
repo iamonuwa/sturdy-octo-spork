@@ -42,8 +42,7 @@ export class InstanceInsights extends OpenAPIRoute {
 
 	async handle(request: IRequest, env: any, _: any, payload: Record<string, string>) {
 		try {
-			const { instance } = payload;
-
+			const instance = payload.query['instance']
 			const { data, error, count } = await connectDB(env)
 				.from('metrics')
 				.select('*', { count: 'exact' })

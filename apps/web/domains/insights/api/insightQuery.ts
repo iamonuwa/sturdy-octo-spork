@@ -4,8 +4,8 @@ import { Insight } from "../../../models/insight"
 import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 
-const fetchInsights = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/insights`, {
+const fetchInsights = async (id: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/apis/insights?instance=${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -27,6 +27,6 @@ export const useInsights = () => {
     return useQuery<string[], Error, Insight[]>({
         queryKey: ["insights", id],
         enabled: !!id,
-        queryFn: fetchInsights
+        queryFn: () => fetchInsights(id)
     })
 }

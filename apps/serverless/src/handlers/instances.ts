@@ -201,7 +201,6 @@ export class UpdateInstanceStatus extends OpenAPIRoute {
 			if (parsedPayload.data.status === "TERMINATED") {
 				await connectDB(env).from('metrics').insert({
 					instance: request.params.id,
-					cpu: Math.random() * Math.min(100, instance.cpu),
 					memory: Math.random() * Math.min(100, instance.memory),
 					disk: Math.random() * Math.min(100, instance.disk),
 					created_at: new Date(),

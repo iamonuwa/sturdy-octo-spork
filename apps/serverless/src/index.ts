@@ -44,7 +44,7 @@ router.get("/apis/instances/:id", FetchInstance);
 router.post("/apis/instances", authMiddleware, CreateInstance);
 router.patch("/apis/instances/:id", authMiddleware, UpdateInstanceStatus);
 router.post('/apis/exchange', ExchangeToken);
-router.get("/apis/insights", authMiddleware, InstanceInsights);
+router.get("/apis/insights", InstanceInsights);
 router.get("/apis/me/", authMiddleware, CurrentUser);
 
 router.original.get("/", (request) =>

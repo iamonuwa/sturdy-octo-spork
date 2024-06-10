@@ -2,9 +2,6 @@ export const ROUTES = [
     {
         title: "Instances",
         href: "/",
-    }, {
-        title: "Source tree",
-        href: "/source-tree",
     },
 ]
 

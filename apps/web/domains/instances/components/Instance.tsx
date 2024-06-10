@@ -118,6 +118,10 @@ export const Instance: FC<Props> = (props) => {
           <DropdownMenuItem asChild>
             <Link href={`/instances/${id}`}>View Instance</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/instances/${id}/source-tree`}>View Source tree</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           {(data || !isLoading) &&
           // manually check if the user is the creator of the instance
           // in a real-world scenario, this should be done on the server

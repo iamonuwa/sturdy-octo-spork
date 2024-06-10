@@ -11,7 +11,7 @@ export const createVmSchema = z.object({
 export type CreateVm = z.infer<typeof createVmSchema>;
 
 export const updateVmSchema = z.object({
-    id: z.string(),
+    id: z.string().optional(),
     status: z.string().optional()
 });
 
