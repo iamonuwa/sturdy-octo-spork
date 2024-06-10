@@ -13,18 +13,16 @@ import {
 import { PFP } from "./PFP";
 import { isAddress } from "viem";
 import { shortenHex } from "@/utils/common";
-import { useAccount } from "wagmi";
 import { useCurrentUser } from "../api/me";
 import { useLogout } from "../api/logout";
 import { usePrivy } from "@privy-io/react-auth";
 
 export const User = () => {
-  const { authenticated, login } = usePrivy();
-  const { isConnected } = useAccount();
+  const { login } = usePrivy();
   const { data } = useCurrentUser();
   const logout = useLogout();
 
-  if (!authenticated || !isConnected || !data)
+  if (!data)
     return (
       <Button variant="outline" onClick={login}>
         Sign in to continue
