@@ -122,11 +122,7 @@ export const Instance: FC<Props> = (props) => {
             <Link href={`/instances/${id}/source-tree`}>View Source tree</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {(data || !isLoading) &&
-          // manually check if the user is the creator of the instance
-          // in a real-world scenario, this should be done on the server
-          isAddress(data?.identifier as `0x${string}`) &&
-          data?.identifier === address ? (
+          {(data || !isLoading) && data?.identifier === from.identifier ? (
             <DropdownMenuItem
               onClick={() =>
                 updateInstance({
