@@ -39,6 +39,8 @@ export class ExchangeToken extends OpenAPIRoute {
 
 			const user = await client.getUser(userId);
 
+			console.log(user)
+
 			// using user id here since this is the only unique identifier we have from privy
 			const { data, error } = await connectDB(env).from('accounts').select('*', { count: 'exact' }).eq('user_id', getId(user.id));
 
@@ -51,10 +53,10 @@ export class ExchangeToken extends OpenAPIRoute {
 
 			if (data.length === 0) {
 				const userObject = {
-					provider: user.wallet ? 'siwe' : user.google ? 'google' : 'twitter',
+					provider: user.wallet ? 'siwe' : user.google ? 'google' : user.email ? 'email' : 'unknown',
 					photo_url: user.twitter?.profilePictureUrl || 'N/A',
 					display_name: user.google?.name || user.twitter?.name || 'N/A',
-					identifier: user.wallet?.address || user.google?.email || user.twitter?.username,
+					identifier: user.wallet?.address || user.google?.email || user.email?.address || user.twitter?.username,
 					user_id: getId(user.id),
 				};
 
