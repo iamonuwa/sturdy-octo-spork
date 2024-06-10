@@ -7,5 +7,4 @@ workers_dev = true
 node_compat=true
 
 kv_namespaces = [
-	{ binding = "VM_CACHE_DEV", id = "1ac4a80432e44b82a050ef85bd63c7f2" }
 ]
