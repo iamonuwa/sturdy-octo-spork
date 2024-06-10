@@ -3,17 +3,18 @@ import { useAccount, useDisconnect } from 'wagmi';
 import Cookies from 'js-cookie'
 import { useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { useToast } from '@machines/ui';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useLogout = () => {
     const { logout } = usePrivy();
     const { isConnected } = useAccount()
     const { disconnect } = useDisconnect()
-    const { toast } = useToast()
+    const queryClient = useQueryClient()
 
     return useCallback(async () => {
         logout()
         if (isConnected) disconnect()
         Cookies.remove("authToken")
-    }, [disconnect, isConnected, logout]);
+        queryClient.setQueryData(["currentUser"], null)
+    }, [disconnect, isConnected, logout, queryClient]);
 }

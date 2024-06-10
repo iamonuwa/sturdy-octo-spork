@@ -39,6 +39,7 @@ export class ExchangeToken extends OpenAPIRoute {
 
 			const user = await client.getUser(userId);
 
+			// using user id here since this is the only unique identifier we have from privy
 			const { data, error } = await connectDB(env).from('accounts').select('*', { count: 'exact' }).eq('user_id', getId(user.id));
 
 			if (error) {
