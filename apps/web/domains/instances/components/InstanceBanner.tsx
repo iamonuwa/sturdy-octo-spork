@@ -2,17 +2,17 @@ import { Button, Skeleton } from "@machines/ui";
 
 import React from "react";
 import { cn } from "@machines/ui/cn";
-import { isAddress } from "viem";
-import { useAccount } from "wagmi";
+import { useCurrentUser } from "@/domains/account/api/me";
 import { useUpdateInstanceMutation } from "../api/updateInstanceMutation";
 import { useVmInstanceQuery } from "../api/instanceQuery";
 
 export const InstanceBanner = () => {
   const { data, isLoading, isError, error } = useVmInstanceQuery();
   const { mutateAsync: updateInstance } = useUpdateInstanceMutation();
-  const { address } = useAccount();
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useCurrentUser();
 
-  if (isLoading)
+  if (isLoading || isCurrentUserLoading)
     return (
       <header>
         <div className="flex flex-col items-start justify-between gap-x-8 gap-y-4 px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
@@ -94,10 +94,7 @@ export const InstanceBanner = () => {
           </p>
         </div>
         {(data || !isLoading) &&
-        // manually check if the user is the creator of the instance
-        // in a real-world scenario, this should be done on the server
-        isAddress(data?.from.identifier as `0x${string}`) &&
-        data?.from.identifier === address ? (
+        data?.from.identifier === currentUser?.identifier ? (
           <Button
             variant="outline"
             onClick={() => {
